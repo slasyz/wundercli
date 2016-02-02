@@ -7,7 +7,7 @@ import (
 )
 
 func TestErrorCheckError(t *testing.T) {
-	var responseData map[string]interface{}
+	var responseData interface{}
 	json.Unmarshal([]byte(`
 		{
 			"error": {
@@ -21,7 +21,7 @@ func TestErrorCheckError(t *testing.T) {
 	expectedStr := "You are not authorized."
 	var result string
 
-	err := ErrorCheck(responseData)
+	err := ErrorCheck(&responseData)
 	if err != nil {
 		result = err.Error()
 	} else {
@@ -34,7 +34,7 @@ func TestErrorCheckError(t *testing.T) {
 }
 
 func TestErrorCheckOkObj(t *testing.T) {
-	var responseData map[string]interface{}
+	var responseData interface{}
 	json.Unmarshal([]byte(`
 		{
 			"id": 409233670,
@@ -49,14 +49,14 @@ func TestErrorCheckOkObj(t *testing.T) {
 		}
 	`), &responseData)
 
-	err := ErrorCheck(responseData)
+	err := ErrorCheck(&responseData)
 	if err != nil {
 		t.Fatalf("Case: JSON object. Expected no error, got %s", err.Error())
 	}
 }
 
 func TestErrorCheckOkList(t *testing.T) {
-	var responseData map[string]interface{}
+	var responseData interface{}
 	json.Unmarshal([]byte(`
 		[
 			{
@@ -86,7 +86,7 @@ func TestErrorCheckOkList(t *testing.T) {
 ]
 	`), &responseData)
 
-	err := ErrorCheck(responseData)
+	err := ErrorCheck(&responseData)
 	if err != nil {
 		t.Fatalf("Case: JSON array. Expected no error, got %s", err.Error())
 	}
