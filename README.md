@@ -3,6 +3,12 @@ wundercli
 
 Unofficial command-line interface to Wunderlist to-do manager
 
+Download
+--------
+
+Latest binary files can be downloaded [here](
+https://github.com/slasyz/wundercli/releases).
+
 Usage
 -----
 
