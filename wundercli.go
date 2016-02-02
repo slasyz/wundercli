@@ -2,99 +2,82 @@ package main
 
 import (
 	"os"
-	"github.com/slasyz/wundercli/api"
 	"fmt"
+	"github.com/slasyz/wundercli/config"
+	"github.com/slasyz/wundercli/api"
 )
 
-var (
-	listNamePrompt = []string{"List name"}
-	taskPrompt = []string{"List name", "Task text"}
-)
-
-// Gets token by calling api.Auth(), puts it to config variable and
-// saves it to file.
-func handleToken(configPath string) {
-	api.DoAuth()
-	config.AccessToken = api.GetAccessToken()
-	saveConfigFile(configPath)
-}
-
-// Gets parameters from command-line arguments or asks them from standard input.
-func getParams(prompt []string) (result []string) {
-	count := len(prompt)
+// Gets parameters from command-line arguments or set them empty if not present.
+func getParams(count int) (result []string) {
 	result = make([]string, count)
 
 	// From command-line arguments
-	for i := 0; i < len(os.Args) - 2; i++ {
+	for i := 0; i < len(os.Args) - 3; i++ {
 		result[i] = os.Args[i+2];
 	}
-	// From standard input
-	for i := len(os.Args) - 2; i < count; i++ {
-		fmt.Print(prompt[i] + ": ")
-		fmt.Scanln(&result[i])
+	// Empty parameters
+	for i := len(os.Args) - 3; i < count; i++ {
+		result[i] = ""
 	}
+	fmt.Println()
 
-	return result;
+	return result
 }
 
 func main() {
-	configPath := getConfigPath()
-
-	if _, err := os.Stat(configPath); err != nil {
-		if !os.IsNotExist(err) {
-			fmt.Println("Config reading error")
-			os.Exit(1)
-		}
-
-		handleToken(configPath)
-	} else {
-		err = parseConfigFile(configPath)
-
-		if err != nil {
-			fmt.Println("Config parsing error.")
-			os.Exit(1)
-		}
+	exists, err := config.OpenConfig()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err.Error())
+		os.Exit(1)
+	}
+	if !exists {
+		api.DoAuth()
+		config.SaveConfig()
 	}
 
-	// Just a test
-	//var response []struct {
-	//	ID int
-	//	Title string
-	//}
-	//err := api.DoRequest("GET", "https://a.wunderlist.com/api/v1/lists", nil, &response)
-	//if err != nil {
-	//	fmt.Println(response)
-	//}
-
 	// Parse command-line arguments.
-	if len(os.Args) == 1 {
+	if len(os.Args) <= 2 {
 		cmdHelp()
-		os.Exit(0)
 	}
 
 	switch os.Args[1] {
 	case "list":
-		cmdList()
-	case "show":
-		params := getParams(listNamePrompt)
-		cmdShow(params[0])
-	case "create":
-		params := getParams(listNamePrompt)
-		cmdCreate(params[0])
-	case "remove":
-		params := getParams(listNamePrompt)
-		cmdRemove(params[0])
-	case "append":
-		params := getParams(taskPrompt)
-		cmdAppend(params[0], params[1])
-	case "check":
-		params := getParams(listNamePrompt)
-		cmdCheck(params[0])
-	case "edit":
-		params := getParams(listNamePrompt)
-		cmdEdit(params[0])
+		switch os.Args[2] {
+		case "all":
+			err = cmdListAll()
+		case "show":
+			params := getParams(1)
+			err = cmdListShow(params[0])
+		case "create":
+			params := getParams(1)
+			err = cmdListCreate(params[0])
+		case "remove":
+			params := getParams(1)
+			err = cmdListRemove(params[0])
+		default:
+			cmdHelp()
+		}
+	case "task":
+		switch os.Args[2] {
+		case "create":
+			params := getParams(2)
+			err = cmdTaskCreate(params[0], params[1])
+		case "check":
+			params := getParams(1)
+			err = cmdTaskCheck(params[0])
+		case "edit":
+			params := getParams(1)
+			err = cmdTaskEdit(params[0])
+		default:
+			cmdHelp()
+		}
 	default:
 		cmdHelp()
+	}
+
+	if err != nil {
+		fmt.Printf("Error: %s\n\n", err.Error())
+		os.Exit(1)
 	}
 
 }

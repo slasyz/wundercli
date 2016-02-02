@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"os"
@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"path"
-	"github.com/slasyz/wundercli/api"
 )
 
 const (
@@ -15,17 +14,8 @@ const (
 	configFileName = "config.json"
 )
 
-type Config struct {
+var Config struct {
 	AccessToken string
-}
-
-var (
-	config Config
-)
-
-func NewConfig() Config {
-	// I may populate it in future with some default variables.
-	return Config{}
 }
 
 type ConfigDoesNotExist error
@@ -53,25 +43,11 @@ func getConfigPath() string {
 	return filepath.Join(absPath, configFileName)
 }
 
-// Opens config file, decodes JSON,
-// sets accessToken variable in api package.
-func parseConfigFile(path string) (err error) {
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
-		return
-	}
-
-	config = NewConfig()
-	err = json.Unmarshal(data, &config)
-
-	api.SetAccessToken(config.AccessToken)
-
-	return
-}
-
 // Saves current config to file.
-func saveConfigFile(configPath string) (err error) {
-	data, err := json.MarshalIndent(config, "", "    ")
+func SaveConfig() (err error) {
+	configPath := getConfigPath()
+
+	data, err := json.MarshalIndent(Config, "", "    ")
 	if err != nil {
 		return errors.New("JSON encode error.")
 	}
@@ -87,4 +63,34 @@ func saveConfigFile(configPath string) (err error) {
 	}
 
 	return nil
+}
+
+// Does all config-related: gets its path, opens it and puts it to variable.
+// If config was opened successfully, return true,
+// if it doesn't exist, return false,
+// return an error otherwise.
+func OpenConfig() (exists bool, err error) {
+	configPath := getConfigPath()
+
+	if _, err := os.Stat(configPath); err != nil {
+		if os.IsNotExist(err) {
+			return false, nil
+		} else {
+			return false, errors.New("config reading error")
+		}
+	} else {
+		// Read config from file.
+		data, err := ioutil.ReadFile(configPath)
+		if err != nil {
+			return false, err
+		}
+
+		// Decode it.
+		err = json.Unmarshal(data, &Config)
+		if err != nil {
+			return false, err
+		}
+
+		return true, nil
+	}
 }

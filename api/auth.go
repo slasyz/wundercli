@@ -5,21 +5,8 @@ import (
 	"os/exec"
 	"runtime"
 	"errors"
+	"github.com/slasyz/wundercli/config"
 )
-
-var (
-	accessToken string
-)
-
-// Getter for private accessToken variable.
-func GetAccessToken() string {
-	return accessToken
-}
-
-// Setter for private accessToken variable.
-func SetAccessToken(value string) {
-	accessToken = value
-}
 
 // Starts an authentication process:
 //   - Opens a browser;
@@ -52,7 +39,7 @@ func DoAuth() (err error) {
 	var data struct {
 		Access_Token string
 	}
-	err = DoRequest("POST", "https://www.wunderlist.com/oauth/access_token", map[string]string{
+	err = DoRequest("POST", "https://www.wunderlist.com/oauth/access_token", map[string]interface{}{
 		"client_id": clientID,
 		"client_secret": clientSecret,
 		"code": code,
@@ -61,7 +48,7 @@ func DoAuth() (err error) {
 		return errors.New("Authentication error.")
 	}
 
-	accessToken = data.Access_Token
+	config.Config.AccessToken = data.Access_Token
 
 	return nil
 }

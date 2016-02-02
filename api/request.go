@@ -7,25 +7,40 @@ import (
 	"errors"
 	"io/ioutil"
 	"fmt"
+	"github.com/slasyz/wundercli/config"
 )
 
-// TODO: checks for API error, like
-//   {
-//     "error": {
-//       "type": "unauthorized",
-//       "translation_key": "api_error_unauthorized",
-//       "message": "You are not authorized."
-//     }
-//   }
-func ErrorCheck(responseData interface{}) (errorMessage string, err error) {
-	return
+// Checks for API error.
+func ErrorCheck(responseData *interface{}) (err error) {
+	switch (*responseData).(type) {
+	case map[string]interface{}:
+		errorVal, thereIsAnError := (*responseData).(map[string]interface{})["error"]
+		if thereIsAnError {
+			var errorMessage string
+			switch errorVal.(type) {
+			case map[string]interface{}:
+				errorMessage = (errorVal.(map[string]interface{})["message"]).(string)
+			case string:
+				errorMessage = errorVal.(string)
+			default:
+				errorMessage = "unknown error"
+			}
+
+
+			return errors.New(errorMessage)
+		} else {
+			return
+		}
+	default:
+		return
+	}
 }
 
 
 // Makes a GET, POST or PATCH request to Wunderlist API.
 //
 // responseData should be pointer to some struct, which response will be decoded to.
-func DoRequest(method string, url string, requestData map[string]string, responseData interface{}) (err error) {
+func DoRequest(method string, url string, requestData map[string]interface{}, responseData interface{}) (err error) {
 	var requestDataByte []byte
 	if requestData == nil {
 		requestDataByte = []byte{}
@@ -41,7 +56,7 @@ func DoRequest(method string, url string, requestData map[string]string, respons
 	if err != nil {
 		return errors.New("request creation error")
 	}
-	req.Header.Set("X-Access-Token", GetAccessToken())
+	req.Header.Set("X-Access-Token", config.Config.AccessToken)
 	req.Header.Set("X-Client-ID", clientID)
 	req.Header.Set("Content-Type", "application/json")
 
@@ -66,9 +81,9 @@ func DoRequest(method string, url string, requestData map[string]string, respons
 	//fmt.Printf("%+v\n", responseData)
 	//fmt.Println("=====/decoded====")
 
-	errorMessage, err := ErrorCheck(&responseData)
+	err = ErrorCheck(&responseData)
 	if err != nil {
-		return fmt.Errorf("API error: {}", errorMessage)
+		return fmt.Errorf("API failure (%s)", err.Error())
 	}
 
 	return

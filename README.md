@@ -8,36 +8,36 @@ Commands:
 
   - Show list of lists:
     ```
-    $ wundercli list
+    $ wundercli list all
     ```
 
   - Show list items:
     ```
-    $ wundercli show [LISTNAME]
+    $ wundercli list show [LISTNAME]
     ```
 
   - Create new list:
     ```
-    $ wundercli create [LISTTITLE]
+    $ wundercli list create [LISTTITLE]
     ```
 
   - Remove the list:
     ```
-    $ wundercli remove [LISTNAME]
+    $ wundercli list remove [LISTNAME]
     ```
 
-  - Add item to a list:
+  - Add task to a list:
     ```
-    $ wundercli append [LISTNAME [ITEMTEXT]]
-    ```
-
-  - Mark item checked:
-    ```
-    $ wundercli check [LISTNAME]
+    $ wundercli task create [LISTNAME [ITEMTEXT]]
     ```
 
-  - Edit item:
+  - Mark task checked:
     ```
-    $ wundercli edit [LISTNAME]
+    $ wundercli task check [LISTNAME]
+    ```
+
+  - Edit task:
+    ```
+    $ wundercli task edit [LISTNAME]
     ```
 
