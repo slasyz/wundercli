@@ -13,7 +13,7 @@ func getParams(count int) (result []string) {
 
 	// From command-line arguments
 	for i := 0; i < len(os.Args) - 3; i++ {
-		result[i] = os.Args[i+2];
+		result[i] = os.Args[i+3];
 	}
 	// Empty parameters
 	for i := len(os.Args) - 3; i < count; i++ {
