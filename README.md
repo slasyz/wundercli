@@ -2,6 +2,10 @@
 Commands:
 ---------
 
+`LISTTITLE` is full list title.
+
+`LISTNAME` is prefix of it (case-insensitive)
+
   - Show list of lists:
     ```
     $ wundercli list
@@ -14,7 +18,7 @@ Commands:
 
   - Create new list:
     ```
-    $ wundercli create [LISTNAME]
+    $ wundercli create [LISTTITLE]
     ```
 
   - Remove the list:
