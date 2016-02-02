@@ -1,9 +1,10 @@
-# wundercli
+wundercli
+=========
 
-Command-line client of Wunderlist to-do manager
+Unofficial command-line interface to Wunderlist to-do manager
 
-## Usage
-
+Usage
+-----
 
   - Show list of lists:
     ```
@@ -40,7 +41,8 @@ Command-line client of Wunderlist to-do manager
     $ wundercli task edit [LISTNAME]
     ```
 
-##### Notes:
+### Notes:
+
 `LISTTITLE` is a full list title.
 
 `LISTNAME` is prefix of it (case-insensitive)
