@@ -9,16 +9,16 @@ import (
 
 // Struct for JSON list object.
 type List struct {
-	ID int
-	Title string
+	ID       int
+	Title    string
 	Revision int
 }
 
 // Struct for JSON task object.
 type Task struct {
-	ID int
-	List_ID int
-	Title string
+	ID       int
+	List_ID  int
+	Title    string
 	Revision int
 }
 
@@ -88,7 +88,7 @@ func DoTaskCreate(list List, taskText string) (err error) {
 	taskText, date := parseDate(taskText)
 	params := map[string]interface{}{
 		"list_id": list.ID,
-		"title": taskText,
+		"title":   taskText,
 	}
 
 	if date != "" {
@@ -104,7 +104,7 @@ func DoTaskCreate(list List, taskText string) (err error) {
 func DoTaskCheck(task Task) (err error) {
 	url := fmt.Sprintf("https://a.wunderlist.com/api/v1/tasks/%d", task.ID)
 	err = DoRequest("PATCH", url, map[string]interface{}{
-		"revision": task.Revision,
+		"revision":  task.Revision,
 		"completed": true,
 	}, nil)
 
@@ -116,7 +116,7 @@ func DoTaskEdit(task Task, taskText string) (err error) {
 	url := fmt.Sprintf("https://a.wunderlist.com/api/v1/tasks/%d", task.ID)
 	err = DoRequest("PATCH", url, map[string]interface{}{
 		"revision": task.Revision,
-		"title": taskText,
+		"title":    taskText,
 	}, nil)
 
 	return

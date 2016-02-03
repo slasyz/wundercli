@@ -1,13 +1,13 @@
 package api
 
 import (
-	"net/http"
 	"bytes"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"fmt"
 	"github.com/slasyz/wundercli/config"
+	"io/ioutil"
+	"net/http"
 )
 
 // Checks for API error.
@@ -26,7 +26,6 @@ func ErrorCheck(responseData *interface{}) (err error) {
 				errorMessage = "unknown error"
 			}
 
-
 			return errors.New(errorMessage)
 		} else {
 			return
@@ -35,7 +34,6 @@ func ErrorCheck(responseData *interface{}) (err error) {
 		return
 	}
 }
-
 
 // Makes a GET, POST or PATCH request to Wunderlist API.
 //
@@ -63,9 +61,9 @@ func DoRequest(method string, url string, requestData map[string]interface{}, re
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-        panic(err)
-    }
-    defer resp.Body.Close()
+		panic(err)
+	}
+	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

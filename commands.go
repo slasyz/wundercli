@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"strings"
+	"bufio"
 	"errors"
+	"fmt"
 	"github.com/slasyz/wundercli/api"
 	"os"
-	"bufio"
+	"strings"
 )
 
 // Gets list object by its short name.
@@ -34,14 +34,14 @@ func getListByShortName(listName string) (list api.List, err error) {
 	if len(sel) == 0 {
 		err = errors.New("List not found")
 		return
-	} else if (len(sel) > 1) {
+	} else if len(sel) > 1 {
 		if listName == "" {
 			fmt.Println("Currently available lists:\n")
 		} else {
 			fmt.Printf("There is several lists starting with \"%s\":\n\n", listName)
 		}
 		for i, el := range sel {
-			fmt.Printf("  [%d] %s\n", i + 1, el.Title)
+			fmt.Printf("  [%d] %s\n", i+1, el.Title)
 		}
 		fmt.Println()
 
@@ -55,7 +55,7 @@ func getListByShortName(listName string) (list api.List, err error) {
 			return
 		}
 
-		return sel[listNo - 1], nil
+		return sel[listNo-1], nil
 	} else {
 		return sel[0], nil
 	}
@@ -69,7 +69,7 @@ func askForTask(list api.List) (task api.Task, err error) {
 	}
 
 	for i, el := range tasks {
-		fmt.Printf("  [%d] %s\n", i + 1, el.Title)
+		fmt.Printf("  [%d] %s\n", i+1, el.Title)
 	}
 	fmt.Println()
 
@@ -83,7 +83,7 @@ func askForTask(list api.List) (task api.Task, err error) {
 		return
 	}
 
-	return tasks[taskNo - 1], nil
+	return tasks[taskNo-1], nil
 }
 
 func cmdHelp() {

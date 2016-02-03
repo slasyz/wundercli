@@ -1,11 +1,11 @@
 package api
 
 import (
+	"errors"
 	"fmt"
+	"github.com/slasyz/wundercli/config"
 	"os/exec"
 	"runtime"
-	"errors"
-	"github.com/slasyz/wundercli/config"
 )
 
 // Starts an authentication process:
@@ -31,7 +31,7 @@ func DoAuth() (err error) {
 	}
 
 	// Ask for the code.
-    fmt.Print("Enter the code: ")
+	fmt.Print("Enter the code: ")
 	var code string
 	fmt.Scanln(&code)
 
@@ -40,9 +40,9 @@ func DoAuth() (err error) {
 		Access_Token string
 	}
 	err = DoRequest("POST", "https://www.wunderlist.com/oauth/access_token", map[string]interface{}{
-		"client_id": clientID,
+		"client_id":     clientID,
 		"client_secret": clientSecret,
-		"code": code,
+		"code":          code,
 	}, &data)
 	if err != nil {
 		return errors.New("Authentication error.")

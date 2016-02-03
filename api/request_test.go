@@ -1,9 +1,9 @@
 package api
 
 import (
-	"testing"
 	"encoding/json"
 	"github.com/slasyz/wundercli/config"
+	"testing"
 )
 
 func TestErrorCheckError(t *testing.T) {

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"os"
 	"fmt"
-	"github.com/slasyz/wundercli/config"
 	"github.com/slasyz/wundercli/api"
+	"github.com/slasyz/wundercli/config"
+	"os"
 )
 
 // Gets parameters from command-line arguments or set them empty if not present.
@@ -12,8 +12,8 @@ func getParams(count int) (result []string) {
 	result = make([]string, count)
 
 	// From command-line arguments
-	for i := 0; i < len(os.Args) - 3; i++ {
-		result[i] = os.Args[i+3];
+	for i := 0; i < len(os.Args)-3; i++ {
+		result[i] = os.Args[i+3]
 	}
 	// Empty parameters
 	for i := len(os.Args) - 3; i < count; i++ {

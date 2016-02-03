@@ -1,17 +1,17 @@
 package config
 
 import (
-	"os"
-	"path/filepath"
-	"io/ioutil"
 	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"os"
 	"path"
+	"path/filepath"
 )
 
 const (
 	configDirectoryName = "wundercli"
-	configFileName = "config.json"
+	configFileName      = "config.json"
 )
 
 var Config struct {

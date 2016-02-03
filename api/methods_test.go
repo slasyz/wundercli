@@ -1,8 +1,8 @@
 package api
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 	"time"
 )
 
