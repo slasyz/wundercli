@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/slasyz/wundercli/api"
 	"os"
+	"bufio"
 )
 
 // Gets list object by its short name.
@@ -151,7 +152,11 @@ func cmdListShow(listName string) (err error) {
 func cmdListCreate(listTitle string) (err error) {
 	if listTitle == "" {
 		fmt.Print("Enter new list title: ")
-		fmt.Scanln(&listTitle)
+		in := bufio.NewReader(os.Stdin)
+		listTitle, err = in.ReadString(byte('\n'))
+		if err != nil {
+			return errors.New("reading from console")
+		}
 		fmt.Println()
 
 		if listTitle == "" {
@@ -191,7 +196,11 @@ func cmdTaskCreate(listName string, taskText string) (err error) {
 
 	if taskText == "" {
 		fmt.Print("Enter task text: ")
-		fmt.Scanln(&taskText)
+		in := bufio.NewReader(os.Stdin)
+		taskText, err = in.ReadString(byte('\n'))
+		if err != nil {
+			return errors.New("reading from console")
+		}
 
 		if taskText == "" {
 			return errors.New("task text cannot be empty")
