@@ -208,7 +208,7 @@ func cmdTaskCreate(listName string, taskText string) (err error) {
 	}
 	fmt.Println()
 
-	err = api.DoTaskAppend(list, taskText)
+	err = api.DoTaskCreate(list, taskText)
 	if err != nil {
 		return
 	}
